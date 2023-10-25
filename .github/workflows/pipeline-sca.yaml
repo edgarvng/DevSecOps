@@ -10,16 +10,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Obteniendo última versión del código"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
 
-      - name: "Instalación Java"
+      - name: "Configurar Java"
         uses: actions/setup-java@v2
         with:
-          java-version: "17"
+          java-version: '17'  
 
       - name: "Compilación"
-        run: chmod +x mvnw && ./mvnw clean install
-
+        run: mvn clean install
+        
       - name: "Verificar paquete"
         run: ls -ltra target
 
