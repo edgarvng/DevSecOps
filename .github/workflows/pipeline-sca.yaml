@@ -9,47 +9,46 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: "Obteniendo ultima version del codigo"
+        uses: actions/checkout@v3
 
-      - name: Set up Java
-        uses: actions/setup-java@v2
+      - name: "Instalacion Java"
+        uses: actions/setup-java@v3
         with:
-          java-version: 17
+          distribution: "temurin"
+          java-version: "17"  
 
-      - name: Build project with Maven
-        run: |
-          chmod +x mvnw
-          ./mvnw clean install
+      - name: "Compilacion"    
+        run: ./mvnw clean install
 
-      - name: Verify the package
+      - name: "verificar paquete"  
         run: ls -ltra target
 
-  sca:
-    needs: build
+  depchecktest:
     runs-on: ubuntu-latest
-    name: Dependency Check Test
+    name: depecheck_test
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v2
 
       - name: Build project with Maven
-        run: |
-          chmod +x mvnw
-          ./mvnw clean install
+        run: mvn clean install
 
-      - name: Run Dependency-Check
-        uses: dependency-check/dependency-check-action@main
+      - name: Depcheck
+        uses: dependency-check/Dependency-Check_Action@main
+        id: Depcheck
         with:
           project: 'test'
+          path: '.'
           format: 'HTML'
-          out: 'reports' # Default
+          out: 'reports' # this is the default, no need to specify unless you wish to override it
           args: >
             --failOnCVSS 7
             --enableRetired
 
-      - name: Upload Test Results
-        uses: actions/upload-artifact@v2
+      - name: Upload Test results
+        uses: actions/upload-artifact@master
         with:
-          name: Depcheck report
-          path: ${{github.workspace}}/reports
+           name: Depcheck report
+           path: ${{github.workspace}}/reports
+
