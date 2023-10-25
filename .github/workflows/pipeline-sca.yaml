@@ -39,7 +39,7 @@ jobs:
           ./mvnw clean install
 
       - name: Run Dependency-Check
-        uses: dependency-check/dependency-check-action@v2
+        uses: dependency-check/dependency-check-action@main
         with:
           project: 'test'
           format: 'HTML'
