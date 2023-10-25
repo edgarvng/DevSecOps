@@ -9,32 +9,36 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: "Obteniendo última versión del código"
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: "Configurar Java"
+      - name: Set up Java
         uses: actions/setup-java@v2
         with:
-          java-version: '17'  
+          java-version: 17
 
-      - name: "Compilación"
-        run: mvn clean install
-        
-      - name: "Verificar paquete"
+      - name: Build project with Maven
+        run: |
+          chmod +x mvnw
+          ./mvnw clean install
+
+      - name: Verify the package
         run: ls -ltra target
 
   sca:
     needs: build
     runs-on: ubuntu-latest
-    name: Depcheck Test
+    name: Dependency Check Test
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Build project with Maven
-        run: chmod +x mvnw && ./mvnw clean install
+        run: |
+          chmod +x mvnw
+          ./mvnw clean install
 
-      - name: Depcheck
+      - name: Run Dependency-Check
         uses: dependency-check/dependency-check-action@v2
         with:
           project: 'test'
