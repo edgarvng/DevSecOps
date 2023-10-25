@@ -28,17 +28,19 @@ jobs:
     name: depecheck_test
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v2
       - name: Build project with Maven
         run: mvn clean install
       - name: Depcheck
         uses: dependency-check/Dependency-Check_Action@main
+        env:
+          JAVA_HOME: /opt/jdk
         id: Depcheck
         with:
           project: 'test'
           path: '.'
           format: 'HTML'
-          out: 'reports' # Default
+          out: 'reports' # this is the default, no need to specify unless you wish to override it
           args: >
             --failOnCVSS 7
             --enableRetired
