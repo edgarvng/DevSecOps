@@ -1,0 +1,51 @@
+name: GOAT Compile
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Obteniendo última versión del código"
+        uses: actions/checkout@v3
+
+      - name: "Instalación Java"
+        uses: actions/setup-java@v2
+        with:
+          java-version: "17"
+
+      - name: "Compilación"
+        run: chmod +x mvnw && ./mvnw clean install
+
+      - name: "Verificar paquete"
+        run: ls -ltra target
+
+  sca:
+    needs: build
+    runs-on: ubuntu-latest
+    name: Depcheck Test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build project with Maven
+        run: chmod +x mvnw && ./mvnw clean install
+
+      - name: Depcheck
+        uses: dependency-check/dependency-check-action@v2
+        with:
+          project: 'test'
+          format: 'HTML'
+          out: 'reports' # Default
+          args: >
+            --failOnCVSS 7
+            --enableRetired
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: Depcheck report
+          path: ${{github.workspace}}/reports
