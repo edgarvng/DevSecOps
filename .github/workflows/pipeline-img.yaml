@@ -23,12 +23,6 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
-      - name: "Instalación de Horusec"
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest-beta
-          sudo mv /usr/local/bin/horusec /usr/bin/horusec
-          horusec version
-
       - name: "Instalación de jq"
         run: sudo apt-get -y install jq
 
@@ -47,4 +41,12 @@ jobs:
         run: ls -ltra reports
 
       - name: "Construir imagen Docker"
-        run: docker build -t webgoat-app:latest .
+        run: docker build -t user/app:latest .
+
+      - name: "Build and push"
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: user/app:latest
+          secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
