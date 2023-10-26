@@ -1,4 +1,4 @@
-name: GOAT Horusec
+name: GOAT Img
 
 on:
   push:
@@ -22,9 +22,6 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "17"
-
-      - name: "Verificar paquete"
-        run: ls -ltra target
 
       - name: "Instalación de Horusec"
         run: |
