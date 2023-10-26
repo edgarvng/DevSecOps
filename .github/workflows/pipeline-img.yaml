@@ -1,4 +1,4 @@
-name: GOAT Img
+name: Docker Img
 
 on:
   push:
@@ -40,13 +40,49 @@ jobs:
       - name: "Verificar reporte"
         run: ls -ltra reports
 
-      - name: "Construir imagen Docker"
-        run: docker build -t user/app:latest .
+jobs:
+  build-and-push-images:
+    runs-on: ubuntu-latest
 
-      - name: "Build and push"
-        uses: docker/build-push-action@v5
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+ - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
-          push: true
-          tags: user/app:latest
-          secrets: |
-            GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
+          context: .  //Contexto para el comando Docker
+          push: false //Indicamos si queremos hacer push de la imagen
+
+
+          FROM docker.io/eclipse-temurin:17.0.3_7-jre-focal
+LABEL NAME = "WebGoat: Application for examples CI/CD"
+
+RUN mkdir /home/webgoat
+
+COPY target/webgoat-2023.5-SNAPSHOT.jar /home/webgoat/
+
+EXPOSE 8080
+EXPOSE 9090
+
+WORKDIR /home/webgoat
+ENTRYPOINT [ "java", \
+   "-Duser.home=/home/webgoat", \
+   "-Dfile.encoding=UTF-8", \
+   "--add-opens", "java.base/java.lang=ALL-UNNAMED", \
+   "--add-opens", "java.base/java.util=ALL-UNNAMED", \
+   "--add-opens", "java.base/java.lang.reflect=ALL-UNNAMED", \
+   "--add-opens", "java.base/java.text=ALL-UNNAMED", \
+   "--add-opens", "java.desktop/java.beans=ALL-UNNAMED", \
+   "--add-opens", "java.desktop/java.awt.font=ALL-UNNAMED", \
+   "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", \
+   "--add-opens", "java.base/java.io=ALL-UNNAMED", \
+   "--add-opens", "java.base/java.util=ALL-UNNAMED", \
+   "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", \
+   "--add-opens", "java.base/java.io=ALL-UNNAMED", \
+   "-Drunning.in.docker=true", \
+   "-Dwebgoat.host=0.0.0.0", \
+   "-Dwebwolf.host=0.0.0.0", \
+   "-Dwebgoat.port=8080", \
+   "-Dwebwolf.port=9090", \
+   "-jar", "webgoat-2023.5-SNAPSHOT.jar" ]
