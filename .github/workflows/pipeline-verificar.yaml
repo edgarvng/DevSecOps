@@ -1,4 +1,4 @@
-name: Verificar Docker Image
+name: Verificar Docker ImageContenedor
 
 on:
   push:
@@ -56,3 +56,10 @@ jobs:
             echo "La imagen Docker 'webgoat/test' no existe."
             exit 1
           fi
+
+      - name: "Crear contenedor Docker"
+        run: |
+         docker run -d --name webgoat-container -p 8080:8080 webgoat/test
+        ports:
+          - 8080:8080
+        
