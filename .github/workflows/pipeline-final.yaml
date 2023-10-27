@@ -101,7 +101,7 @@ jobs:
         continue-on-error: true
 
       - name: "Crear Contenedor"
-        run: docker run --name WebGoat -d -p 127.0.0.1:8080:8080 -p 127.0.0.1:9090:9090 webgoat:latest
+        run: docker run --name webgoat -d -p 8080:8080 -p 9090:9090 webgoat/test
       
       - name: "Installing Arachni"
         run: |
