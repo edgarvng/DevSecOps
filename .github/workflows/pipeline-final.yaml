@@ -90,7 +90,7 @@ jobs:
           docker container stop webgoat
           docker container rm webgoat
 
-            - name: Checkout code
+      - name: Checkout code
         uses: actions/checkout@v2
 
       - name: Build an image from Dockerfile
