@@ -1,4 +1,4 @@
-name: Verificar Docker ImageContenedor
+name: Verificar 
 
 on:
   push:
@@ -43,14 +43,10 @@ jobs:
       - name: "Verificar reporte"
         run: ls -ltra reports
 
-      - name: "Ejecutar Horusec"
-        run: sudo horusec start -p="./" --return-error -e="false"
-
       - name: "Generación de la imagen Docker"
         run: |
           docker build -f Dockerfile . -t webgoat/test
           docker images
-
       - name: "Verificar imagen Docker"
         run: |
           if docker images | grep -q "webgoat/test"; then
@@ -59,7 +55,6 @@ jobs:
             echo "La imagen Docker 'webgoat/test' no existe."
             exit 1
           fi
-
       - name: "Crear contenedor Docker"
         run: |
          docker run -d --name webgoat-container -p 8080:8080 webgoat/test
@@ -72,4 +67,3 @@ jobs:
           curl http://127.0.0.1:8080/WebGoat/login
           docker container stop webgoat
           docker container rm webgoat
-

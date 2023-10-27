@@ -58,24 +58,6 @@ jobs:
       - name: "Compilacion"
         run: ./mvnw clean install
  
-      - name: "Verificar paquete"
-        run: ls -ltra target
-
-      - name: "Instalación de Horusec"
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest-beta
-          sudo mv /usr/local/bin/horusec /usr/bin/horusec
-          horusec version
-
-      - name: "Instalación de jq"
-        run: sudo apt-get -y install jq
- 
-      - name: "Verificar reporte"
-        run: ls -ltra reports
-      
-      - name: "Verificar reporte"
-        run: ls -ltra reports
-
       - name: "Generación de la imagen Docker"
         run: |
           docker build -f Dockerfile . -t webgoat/test
