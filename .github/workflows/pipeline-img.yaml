@@ -42,6 +42,8 @@ jobs:
  
       - name: "Verificar reporte"
         run: ls -ltra reports
- 
-      - name: "Imagen Docker"
-        run: "docker build -t devsecops:latest ./"
+      
+      - name: "Generacion imagen docker"
+        run: |
+          docker build -f Dockerfile . -t webgoat/test
+          docker images
