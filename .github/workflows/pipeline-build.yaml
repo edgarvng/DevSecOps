@@ -1,4 +1,4 @@
-name: GOAT Compile
+name: GOAT Build
 
 on:
   push:
