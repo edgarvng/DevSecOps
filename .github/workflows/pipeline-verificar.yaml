@@ -1,10 +1,10 @@
-name: Docker ImgVerificar
- 
+name: Verificar Docker Image
+
 on:
   push:
     branches:
       - main
- 
+
 jobs:
   integration:
     runs-on: ubuntu-latest
@@ -12,23 +12,23 @@ jobs:
       security-events: write
       actions: read
       contents: read
- 
+
     steps:
-      - name: "Obteniendo ultima version del codigo"
+      - name: "Obtener la última versión del código"
         uses: actions/checkout@v3
- 
-      - name: "Instalacion Java"
+
+      - name: "Instalación de Java"
         uses: actions/setup-java@v3
         with:
           distribution: "temurin"
           java-version: "17"
- 
-      - name: "Compilacion"
+
+      - name: "Compilación"
         run: ./mvnw clean install
- 
+
       - name: "Verificar paquete"
         run: ls -ltra target
- 
+
       - name: "Dependency Check"
         uses: dependency-check/Dependency-Check_Action@main
         env:
@@ -39,11 +39,11 @@ jobs:
           path: '.'
           format: 'HTML'
           out: 'reports'
- 
+
       - name: "Verificar reporte"
         run: ls -ltra reports
-      
-      - name: "Generacion imagen docker"
+
+      - name: "Generación de la imagen Docker"
         run: |
           docker build -f Dockerfile . -t webgoat/test
           docker images
@@ -51,8 +51,7 @@ jobs:
       - name: "Verificar imagen Docker"
         run: |
           if docker images | grep -q "webgoat/test"; then
-           echo "La imagen Docker 'webgoat/test' se ha creado con éxito."
+            echo "La imagen Docker 'webgoat/test' se ha creado con éxito."
           else
             echo "La imagen Docker 'webgoat/test' no se ha creado correctamente."
-            exit 1 
-          fi
+            exit 1
