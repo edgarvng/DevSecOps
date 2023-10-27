@@ -14,31 +14,31 @@ jobs:
       contents: read
 
     steps:
-      - name: "Obtener la última versión del código"
+      - name: Obtener la última versión del código
         uses: actions/checkout@v3
 
-      - name: "Instalación Java"
+      - name: Instalación Java
         uses: actions/setup-java@v3
         with:
           distribution: "temurin"
           java-version: "17"
 
-      - name: "Compilación"
+      - name: Compilación
         run: ./mvnw clean install
 
-      - name: "Verificar paquete"
+      - name: Verificar paquete
         run: ls -ltra target
 
-      - name: "Instalación de Horusec"
+      - name: Instalación de Horusec
         run: |
           curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest-beta
           sudo mv /usr/local/bin/horusec /usr/bin/horusec
           horusec version
 
-      - name: "Instalación de jq"
+      - name: Instalación de jq
         run: sudo apt-get -y install jq
 
-      - name: "Dependency Check"
+      - name: Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
         env:
           JAVA_HOME: /opt/jdk
@@ -49,17 +49,25 @@ jobs:
           format: 'HTML'
           out: 'reports'
 
-      - name: "Verificar reporte"
+      - name: Verificar reporte
         run: ls -ltra reports
 
-      - name: "Ejecutar Horusec"
+      - name: Ejecutar Horusec
         run: sudo horusec start -p="./" --return-error -e="false"
 
-      - name: "Generación de la imagen Docker"
+  docker:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    steps:
+      - name: Generación de la imagen Docker
         run: |
           docker build -f Dockerfile . -t webgoat/test
 
-      - name: "Verificar imagen Docker"
+      - name: Verificar imagen Docker
         run: |
           if docker images | grep -q "webgoat/test"; then
             echo "La imagen Docker 'webgoat/test' existe."
@@ -68,20 +76,20 @@ jobs:
             exit 1
           fi
 
-      - name: "Instalar Trivy"
+      - name: Instalar Trivy
         run: |
           wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb
           sudo dpkg -i trivy_0.18.3_Linux-64bit.deb
 
-      - name: "Escanear con Trivy"
+      - name: Escanear con Trivy
         run: |
           trivy webgoat/test
 
-      - name: "Crear contenedor Docker"
+      - name: Crear contenedor Docker
         run: |
           docker run -d --name webgoat-container -p 8080:8080 webgoat/test
 
-      - name: "Crear contenedor de prueba"
+      - name: Crear contenedor de prueba
         run: |
           docker run --name webgoat -d -p 127.0.0.1:8080:8080 -p 127.0.0.1:9090:9090 webgoat/test
           echo "Up server..."
