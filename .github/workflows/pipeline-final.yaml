@@ -1,4 +1,4 @@
-name: Docker End
+name: Docker Prueba Final
 
 on:
   push:
@@ -52,17 +52,9 @@ jobs:
       - name: Verificar reporte
         run: ls -ltra reports
 
-      - name: Ejecutar Horusec
+      - name: "Ejecutar Horusec"
         run: sudo horusec start -p="./" --return-error -e="false"
 
-  docker:
-    runs-on: ubuntu-latest
-    permissions:
-      security-events: write
-      actions: read
-      contents: read
-
-    steps:
       - name: Generación de la imagen Docker
         run: |
           docker build -f Dockerfile . -t webgoat/test

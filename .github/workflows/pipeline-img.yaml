@@ -1,4 +1,4 @@
-name: Goat Docker Final Img
+name: Goat Final Img Docker
  
 on:
   push:
