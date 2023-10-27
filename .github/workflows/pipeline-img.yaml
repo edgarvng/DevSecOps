@@ -66,9 +66,9 @@ jobs:
       - name: "Verificar imagen Docker"
         run: |
           if docker images | grep -q "webgoat/test"; then
-            echo "La imagen Docker 'webgoat/test' existe."
+            echo "La imagen 'webgoat/test' existe."
           else
-            echo "La imagen Docker 'webgoat/test' no existe."
+            echo "La imagen 'webgoat/test' no existe."
             exit 1
           fi
 
