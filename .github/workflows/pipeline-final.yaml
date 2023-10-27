@@ -90,9 +90,6 @@ jobs:
           docker container stop webgoat
           docker container rm webgoat
 
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Construir imagen
         run: |
           docker build -t docker.io/edgarvng/webgoat-test:${{ github.sha }} .
