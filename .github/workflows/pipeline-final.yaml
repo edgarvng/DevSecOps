@@ -68,6 +68,15 @@ jobs:
             exit 1
           fi
 
+      - name: "Instalar Trivy"
+        run: |
+          wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb
+          sudo dpkg -i trivy_0.18.3_Linux-64bit.deb
+
+      - name: "Escanear imagen con Trivy"
+        run: |
+          trivy webgoat/test
+
       - name: "Crear contenedor Docker"
         run: |
           docker run -d --name webgoat-container -p 8080:8080 webgoat/test
@@ -80,12 +89,3 @@ jobs:
           curl http://127.0.0.1:8080/WebGoat/login
           docker container stop webgoat
           docker container rm webgoat
-
-      - name: "Instalar Trivy"
-        run: |
-          wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb
-          sudo dpkg -i trivy_0.18.3_Linux-64bit.deb
-
-      - name: "Escanear contenedor con Trivy"
-        run: |
-          trivy webgoat-container
