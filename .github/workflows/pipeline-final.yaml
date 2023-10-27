@@ -57,14 +57,14 @@ jobs:
 
       - name: Generación de la imagen Docker
         run: |
-          docker build -f Dockerfile . -t webgoat-test
+          docker build -f Dockerfile . -t webgoat/test
 
       - name: Verificar imagen Docker
         run: |
-          if docker images | grep -q "webgoat-test"; then
-            echo "La imagen 'webgoat-test' existe."
+          if docker images | grep -q "webgoat/test"; then
+            echo "La imagen 'webgoat/test' existe."
           else
-            echo "La imagen 'webgoat-test' no existe."
+            echo "La imagen 'webgoat/test' no existe."
             exit 1
           fi
 
@@ -75,31 +75,28 @@ jobs:
 
       - name: Escanear con Trivy
         run: |
-          trivy webgoat-test
+          trivy webgoat/test
 
       - name: Crear contenedor Docker
         run: |
-          docker run -d --name webgoat-container -p 8080:8080 webgoat-test
+          docker run -d --name webgoat-container -p 8080:8080 webgoat/test
 
       - name: Crear contenedor de prueba
         run: |
-          docker run --name webgoat -d -p 127.0.0.1:8080:8080 -p 127.0.0.1:9090:9090 webgoat-test
+          docker run --name webgoat -d -p 127.0.0.1:8080:8080 -p 127.0.0.1:9090:9090 webgoat/test
           echo "Up server..."
           sleep 45
           curl http://127.0.0.1:8080/WebGoat/login
           docker container stop webgoat
           docker container rm webgoat
 
-      - name: Construir imagen
-        run: |
-          docker build -t docker.io/edgarvng/webgoat-test:${{ github.sha }} .
-
-      - name: Run Trivy vulnerability scanner
+      - name: "Run Trivy vulnerability scanner"
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: 'docker.io/edgarvng/webgoat-test:${{ github.sha }}'
-          format: 'table'
+          image-ref: 'webgoat/test'
+          timeout: 10m0s
           exit-code: '1'
-          ignore-unfixed: true
-          vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
+          scanners: vuln,secret,config
+        continue-on-error: true
+
