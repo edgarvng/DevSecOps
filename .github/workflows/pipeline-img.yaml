@@ -48,5 +48,4 @@ jobs:
           docker build -f Dockerfile . -t webgoat/test
           docker images
 
-      - name: "Verificar imagen"
       
