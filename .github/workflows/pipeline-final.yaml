@@ -75,7 +75,7 @@ jobs:
 
       - name: Escanear con Trivy
         run: |
-          trivy webgoat/test
+          trivy webgoat-test
 
       - name: Crear contenedor Docker
         run: |
@@ -90,13 +90,17 @@ jobs:
           docker container stop webgoat
           docker container rm webgoat
 
+  action trivy:
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build an image from Dockerfile
+      - name: Construir imagen
         run: |
           docker build -t docker.io/edgarvng/webgoat-test:${{ github.sha }} .
-      
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
