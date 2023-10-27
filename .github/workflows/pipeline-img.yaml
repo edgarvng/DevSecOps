@@ -60,6 +60,15 @@ jobs:
  
       - name: "Verificar paquete"
         run: ls -ltra target
+
+      - name: "Instalación de Horusec"
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/ZupIT/horusec/main/deployments/scripts/install.sh | bash -s latest-beta
+          sudo mv /usr/local/bin/horusec /usr/bin/horusec
+          horusec version
+
+      - name: "Instalación de jq"
+        run: sudo apt-get -y install jq
  
       - name: "Dependency Check"
         uses: dependency-check/Dependency-Check_Action@main
@@ -75,12 +84,7 @@ jobs:
       - name: "Verificar reporte"
         run: ls -ltra reports
       
-      - name: "Generacion imagen docker"
-        run: |
-          docker build -f Dockerfile . -t webgoat/test
-          docker images
-      
-            - name: "Verificar reporte"
+      - name: "Verificar reporte"
         run: ls -ltra reports
 
       - name: "Generación de la imagen Docker"

@@ -43,6 +43,9 @@ jobs:
       - name: "Verificar reporte"
         run: ls -ltra reports
 
+      - name: "Ejecutar Horusec"
+        run: sudo horusec start -p="./" --return-error -e="false"
+
       - name: "Generación de la imagen Docker"
         run: |
           docker build -f Dockerfile . -t webgoat/test
