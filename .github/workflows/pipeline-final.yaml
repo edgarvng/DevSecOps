@@ -90,10 +90,6 @@ jobs:
           docker container stop webgoat
           docker container rm webgoat
 
-  action trivy:
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
