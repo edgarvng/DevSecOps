@@ -75,14 +75,7 @@ jobs:
       - name: Crear contenedor Docker
         run: |
           docker run -d --name webgoat-container -p 8080:8080 webgoat/test
-      - name: Crear contenedor de prueba
-        run: |
-          docker run --name webgoat -d -p 127.0.0.1:8080:8080 -p 127.0.0.1:9090:9090 webgoat/test
-          echo "Up server..."
-          sleep 45
-          curl http://127.0.0.1:8080/WebGoat/login
-          docker container stop webgoat
-          docker container rm webgoat
+      
       - name: "Run Trivy vulnerability scanner"
         uses: aquasecurity/trivy-action@master
         with:
