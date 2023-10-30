@@ -69,9 +69,6 @@ jobs:
             exit 1
           fi
 
-      - name: "Verificar estado del contenedor"
-        run: docker ps | grep webgoat/test
-
       - name: Instalar Trivy
         run: |
           wget https://github.com/aquasecurity/trivy/releases/download/v0.18.3/trivy_0.18.3_Linux-64bit.deb
