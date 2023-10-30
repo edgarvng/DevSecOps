@@ -83,7 +83,7 @@ jobs:
 
 #      - name: Crear contenedor Docker
 #       run: |
-          docker run -d --name webgoat-container -p 8080:8080 webgoat/test
+#          docker run -d --name webgoat-container -p 8080:8080 webgoat/test
 
       - name: Crear contenedor de prueba
         run: |
