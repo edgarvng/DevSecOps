@@ -69,8 +69,8 @@ jobs:
             exit 1
           fi
 
-      - name: "Verificar estado del contenedor"
-        run: docker ps | grep webgoat/test
+ #     - name: "Verificar estado del contenedor"
+ #       run: docker ps | grep webgoat/test
 
       - name: Instalar Trivy
         run: |
@@ -110,4 +110,7 @@ jobs:
  
 #      - name: "Executing Arachni"
 #        run: ./arachni-1.6.1.3-0.6.1.1/bin/arachni --check=*http://$var_IP:8080/WebGoat/login
+
+      - name: "Encontrar la ip"
+        run: 
  
