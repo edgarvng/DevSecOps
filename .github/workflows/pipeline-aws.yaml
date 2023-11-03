@@ -53,6 +53,7 @@ jobs:
 
       - name: "Aprovisionamiento de Terraform"
         run: |
+          cd terraform
           terraform init
           terraform apply
         env:
