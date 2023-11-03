@@ -64,4 +64,14 @@ jobs:
           cd ansible
           echo "$PRIVATE_KEY" >> $HOME/key.pem
           sudo chmod 600 $HOME/key.pem
+          export ANSIBLE_HOST_KEY_CHECKING=false
+          sudo ansible-playbook -i inventario server.yaml --become
+        continue-on-error: true
+
+      - name: "Destruccion de la infrestructura"    
+        run:  |
+          cd terraform
+          terraform plan -destroy -out tfplan
+          terrsaform apply tfplan
+
       
