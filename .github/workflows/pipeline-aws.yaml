@@ -43,8 +43,8 @@ jobs:
       - name: "Cargar imagen a ECR"
         run: |
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/i3l4a3q5/edgarv 
-          docker tag webgoat public.ecr.aws/i3l4a3q5/edgarv/webgoat
-          docker push public.ecr.aws/i3l4a3q5/edgarv/webgoat
+          docker tag webgoat public.ecr.aws/i3l4a3q5/edgarv/
+          docker push public.ecr.aws/i3l4a3q5/edgarv
         env:
           ECR_URL: public.ecr.aws/i3l4a3q5/edgarv 
 
@@ -53,6 +53,3 @@ jobs:
           cd terraform
           terraform initgit 
           terraform apply -auto-approve
-        env:
-          aws-access-key-id: ${{ secrets.EDGARLABNOV2023AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.EDGARLABNOV2023AWS_SECRET_ACCESS_KEY }}
