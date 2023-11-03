@@ -58,8 +58,3 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.EDGARLABNOV2023AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.EDGARLABNOV2023AWS_SECRET_ACCESS_KEY }}
-
-      - name: "Ejecutar ansible"
-          
-
-      
