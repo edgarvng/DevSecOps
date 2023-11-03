@@ -64,3 +64,4 @@ jobs:
           cd ansible
           echo "$PRIVATE_KEY" >> $HOME/key.pem
           sudo chmodd 600 $HOME/key.pem
+          
