@@ -43,10 +43,10 @@ jobs:
       - name: "Cargar imagen a ECR"
         run: |
           aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/i3l4a3q5/edgarv 
-          docker tag webgoat public.ecr.aws/i3l4a3q5/edgarv/
-          docker push public.ecr.aws/i3l4a3q5/edgarv
+          docker tag webgoat public.ecr.aws/i3l4a3q5/
+          docker push public.ecr.aws/i3l4a3q5/
         env:
-          ECR_URL: public.ecr.aws/i3l4a3q5/edgarv 
+          ECR_URL: public.ecr.aws/i3l4a3q5/ 
 
       - name: "Aprovisionamiento de Terraform"
         run: |
