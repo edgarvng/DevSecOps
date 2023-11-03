@@ -50,18 +50,17 @@ jobs:
         run: |
           cd terraform
           terraform init
-          terraform plan -out tfplan 
-          terraform apply tfplan >> results_tfplan.txt 
-          ip_webgoat=$(cat results_tfplan.txt | grep "My_ip =" | awk '{ print $3 }' sed 's/"//g')
+          terraform plan -out tfplan
+          terraform apply tfplan >> results_tfplan.txt
+          ip_webgoat=$(cat results_tfplan.txt | grep "My_ip =" | awk '{ print $3 }' | sed 's/"//g')
           sed -i "s/IP/$ip_webgoat/g" ../ansible/inventario
 
       - name: "Ansible"
         env:
           PRIVATE_KEY: ${{ secrets.PEMAWS }}
         run: |
-          sudo apt upddate
+          sudo apt update
           sudo apt install -y ansible
           cd ansible
           echo "$PRIVATE_KEY" >> $HOME/key.pem
-          sudo chmodd 600 $HOME/key.pem
-          
+          sudo chmod 600 $HOME/key.pem
