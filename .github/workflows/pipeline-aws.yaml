@@ -42,14 +42,25 @@ jobs:
 
       - name: "Cargar imagen a ECR"
         run: |
-          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/i3l4a3q5/edgarv 
-          docker tag webgoat public.ecr.aws/i3l4a3q5/
-          docker push public.ecr.aws/i3l4a3q5/
-        env:
-          ECR_URL: public.ecr.aws/i3l4a3q5/ 
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/i3l4a3q5
+          docker tag webgoat public.ecr.aws/i3l4a3q5/edgarv:latest
+          docker push public.ecr.aws/i3l4a3q5/edgarv:latest
 
       - name: "Aprovisionamiento de Terraform"
         run: |
           cd terraform
-          terraform initgit 
-          terraform apply -auto-approve
+          terraform init
+          terraform plan -out tfplan 
+          terraform apply tfplan >> results_tfplan.txt 
+          ip_webgoat=$(cat results_tfplan.txt | grep "My_ip =" | awk '{ print $3 }' sed 's/"//g')
+          sed -i "s/IP/$ip_webgoat/g" ../ansible/inventario
+
+      - name: "Ansible"
+        env:
+          PRIVATE_KEY: ${{ secrets.PEMAWS }}
+        run: |
+          sudo apt upddate
+          sudo apt install -y ansible
+          cd ansible
+          echo "$PRIVATE_KEY" >> $HOME/key.pem
+          sudo chmodd 600 $HOME/key.pem
