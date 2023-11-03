@@ -72,6 +72,6 @@ jobs:
         run:  |
           cd terraform
           terraform plan -destroy -out tfplan
-          terrsaform apply tfplan
+          terraform apply tfplan
 
       

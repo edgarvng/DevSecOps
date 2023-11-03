@@ -1,1 +1,5 @@
+[aws]
+IP
+
+[all:vars]
 ansible_user=ubuntu
