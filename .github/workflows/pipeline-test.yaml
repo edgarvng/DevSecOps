@@ -1,4 +1,4 @@
-name: DevSecOps-Test-AWS
+name: DevSecOps-Prueba-AWS
  
 on:
   push:
