@@ -104,9 +104,12 @@ jobs:
         with:
           sarif_file: ${{ github.workspace }}/codeql-sarif.sarif
 
-      - name: Run Code Scanning
-        uses: github/code-scanning/scan@v1
+      - name: Run Analysis
+        uses: codescan-io/codescan-scanner-action@master
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tool: 'horusec'
-          file-path: 'reports/horusec.json'
+            login: ${{ secrets.CODESCAN_AUTH_TOKEN }}
+            organization: test-org
+            projectKey: test-java-project
+            args: |
+                sonar.verbose=true
+                sonar.java.binaries=target
