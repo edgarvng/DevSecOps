@@ -82,6 +82,7 @@ jobs:
           sudo chmod 600 $HOME/key.pem
           export ANSIBLE_HOST_KEY_CHECKING=false
           sudo ansible-playbook -i inventario server.yaml --become
+          sleep 45
         continue-on-error: true
 
       - name: "Instalar Arachni"
