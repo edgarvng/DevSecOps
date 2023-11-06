@@ -71,7 +71,7 @@ jobs:
         run: docker run -d --name webgoat-container -p 8080:8080 webgoat/test
 
       - name: Ejecutar el escáner de vulnerabilidades Trivy
-        uses: aquasecurity/trivy-action@v1
+        uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'webgoat/test'
           exit-code: '1'
