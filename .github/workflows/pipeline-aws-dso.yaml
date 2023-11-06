@@ -1,4 +1,4 @@
-name: Pipeline-Final-DevSecOps-06-11-23
+name: Pipeline-Final-DevSecOps
 
 on:
   push:
