@@ -64,7 +64,7 @@ jobs:
           cd terraform
           terraform init
           terraform plan -out tfplan
-          terraform apply tfplan >> results_tfplan.txt
+#          terraform apply tfplan >> results_tfplan.txt
 #          ip_webgoat=$(cat results_tfplan.txt | grep "My_ip =" | awk '{ print $3 }' | sed 's/"//g')
 #          sed -i "s/IP/$ip_webgoat/g" ../ansible/inventario
 #          echo "IP_WEBGOAT=$ip_webgoat" >> $GITHUB_ENV
