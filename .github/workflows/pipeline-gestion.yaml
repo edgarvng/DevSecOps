@@ -1,4 +1,4 @@
-name: Docker Prueba Final
+name: Docker Gestion
 
 on:
   push:
