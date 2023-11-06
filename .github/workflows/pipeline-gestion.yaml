@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+    branches:
+      - main    
 
 jobs:
   integration:
@@ -104,19 +106,6 @@ jobs:
         with:
           sarif_file: ${{ github.workspace }}/codeql-sarif.sarif
 
-name: Security Scans
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-jobs:
-  build:
-    name: build
-    runs-on: ubuntu-20.04
-    steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
