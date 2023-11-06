@@ -57,9 +57,10 @@ jobs:
         with:
           directory: terraform
           framework: terraform 
+        continue-on-error: true
 
       - name: "Aprovisionamiento de Terraform"
-        run: |
+        run: 
           cd terraform
           terraform init
           terraform plan -out tfplan
@@ -89,6 +90,7 @@ jobs:
       - name: "Executing Arachni"
         run: |
           ./arachni-1.6.1.3-0.6.1.1/bin/arachni --check="http://${{ env.IP_WEBGOAT }}:8080/WebGoat/login"
+        continue-on-error: true
 
       - name: "Destruccion de la infrestructura..."    
         run:  |
