@@ -46,6 +46,18 @@ jobs:
           docker tag webgoat public.ecr.aws/i3l4a3q5/edgarv:latest
           docker push public.ecr.aws/i3l4a3q5/edgarv:latest
 
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+      - name: Test with Checkov
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: terraform
+          framework: terraform 
+
       - name: "Aprovisionamiento de Terraform"
         run: |
           cd terraform
