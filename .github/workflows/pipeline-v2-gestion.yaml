@@ -1,0 +1,109 @@
+name: Gestion
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Obtener última versión del código"
+        uses: actions/checkout@v3
+
+      - name: "Instalación de Java"
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: "Compilación"
+        run: ./mvnw clean install
+
+      - name: "Verificar paquete"
+        run: ls -ltra target
+
+      - name: "Dependency-check"
+        uses: dependency-check/Dependency-Check_Action@main
+        env:
+          JAVA_HOME: /opt/jdk
+        id: Depcheck
+        with:
+          project: 'WebGoat'
+          path: '.'
+          format: 'SARIF'
+          out: 'reporte'
+
+      - name: Upload SARIF report
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ github.workspace }}/reporte
+          checkout_path: ${{ github.workspace }}/reporte
+
+      - name: "Verificar reporte"
+        run: ls -ltra reporte
+
+      - name: "Crear imagen de Docker"
+        run: docker build -t webgoat ./
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          security-checks: 'vuln,secret,config'
+          ignore-unfixed: true
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+
+      - name: Subir reporte
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: 'trivy-results.sarif'
+          category: 'code'
+
+      - name: "Verificar imagen"
+        run: docker images
+
+      - name: "imagen Docker"
+        run: |
+          docker build -f Dockerfile . -t webgoat:latest
+
+      - name: "run container"
+        run: |
+          docker run -p 8080:80 -d --name test webgoat
+
+      - name: Ejecutar escaneo Arachnii
+        run: |
+          wget -O arachni.tar.gz https://github.com/Arachni/arachni/releases/download/v1.5.1/arachni-1.5.1-0.5.12-linux-x86_64.tar.gz
+          tar xvzf arachni.tar.gz
+          cd arachni-1.5.1-0.5.12/
+          var_IP=$(docker inspect test | grep "IPAddress" | tail -1 | cut -d '"' -f 4)
+          ./bin/arachni https://$var_IP:8080/WebGoat/login --output-verbose 1 --report-save-path=arachni-report.afr
+
+      - name: "Test"
+        run: |
+          docker start test
+          echo "..."
+          docker ps -a
+
+          docker container stop test
+          docker container rm test
+
+  horusec:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Obtener última versión del código"
+        uses: actions/checkout@v3
+
+      - name: "Instalación de Java"
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: "Ejecución de horusec"
+        id: run_horusec
+        uses: fike/horusec-action@main
+        with:
+          arguments: -p="./" --return-error -e="false"
