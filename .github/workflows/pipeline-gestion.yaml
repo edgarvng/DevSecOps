@@ -105,7 +105,7 @@ jobs:
           sarif_file: ${{ github.workspace }}/codeql-sarif.sarif
 
       - name: Run Code Scanning
-        uses: github/code-scanning/scan@master
+        uses: github/code-scanning/scan@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           tool: 'horusec'
