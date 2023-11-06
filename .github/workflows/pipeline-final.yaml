@@ -46,7 +46,7 @@ jobs:
         with:
           project: 'WebGoat'
           path: '.'
-          format: 'HTML'
+          format: 'SARIF'
           out: 'reports'
 
       - name: Verificar reporte
