@@ -1,5 +1,5 @@
 [aws]
-IP_WEBGOAT
+IP
 
 [all:vars]
 ansible_user=ubuntu
