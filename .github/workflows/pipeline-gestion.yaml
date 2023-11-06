@@ -94,14 +94,19 @@ jobs:
       - name: Codescan
         uses: codescan-io/codescan-scanner-action@master
         with:
-            login: ${{ secrets.CODESCAN_AUTH_TOKEN }}
-            organization: test-org
-            projectKey: test-java-project
-            args: |
-                sonar.verbose=true
-                sonar.java.binaries=target
+          login: ${{ secrets.CODESCAN_AUTH_TOKEN }}
+          organization: test-org
+          projectKey: test-java-project
+          args: |
+              sonar.verbose=true
+              sonar.java.binaries=target
+              codeql.sarif=${{ github.workspace }}/codeql-sarif.sarif
 
-      - name: Upload CodeQL SARIF report  
-        uses: github/codeql-action/upload-sarif@v1  
-        with:    
-            sarif_file: ${{ steps.codeql.outputs.sarif_file }}
+      - name: Inicializar CodeQL
+        uses: github/codeql-action/init@v1
+
+      - name: Upload CodeQL SARIF report
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: ${{ github.workspace }}/codeql-sarif.sarif
+
