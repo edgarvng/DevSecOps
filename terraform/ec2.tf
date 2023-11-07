@@ -18,7 +18,7 @@ output "My_ip"{
 }
 
 resource "aws_security_group" "my_ec2" {
-  name        = "aws-security-group-vfin1"
+  name        = "aws-security-group-v1fin"
   description = "Security Group"
   vpc_id = "vpc-0dc979631fedb2186"
  
