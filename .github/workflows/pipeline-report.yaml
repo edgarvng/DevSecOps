@@ -68,17 +68,18 @@ jobs:
       - name: Reflect Dojo trivy
         run: python3 import.py -f ./trivy-results.json -t "Trivy Scan" 
 
-name: Python Secret
-
-on: 
-  workflow_dispatch:
-
-env:
-  api_key: ${{  secrets.API_KEY  }}
-
-jobs:
-  run-python:
+  python-secret:
+    name: Python Secret
     runs-on: ubuntu-latest
+
+    env:
+      api_key: ${{ secrets.API_KEY }}
+
     steps:
-      - name: Checkout Code
-	      uses: actions/checkout@v3
+      - name: "Checkout Code"
+        uses: actions/checkout@v3
+
+      - name: "Configuración de Python 3.8"
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
