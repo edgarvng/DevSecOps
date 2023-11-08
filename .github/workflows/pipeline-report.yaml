@@ -1,48 +1,69 @@
-name: Subir reporte
+name: Pipeline Subir Reporte
 
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
-  upload_report:
+  integration:
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: "Obteniendo última versión del código"
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
+      - name: "Instalación de Java"
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
 
-    - name: Install dependencies
-      run: |
-        python3 -m pip install --upgrade pip
-        pip install requests
-      working-directory: ${{ github.workspace }}
+      - name: "Compilación"
+        run: ./mvnw clean install
 
-    - name: Run the script
-      run: | 
-        python3 import.py -f report-trivy.json -t "Trivy Scan"
-      env:
-        api_key: ${{ secrets.API_KEY }}  
+      - name: "Verificar paquete"
+        run: ls -ltra target
 
-    - name: Upload report
-      run: |
-        curl -X POST -H "Authorization: Bearer $api_key" \
-          -F "file=@$GITHUB_WORKSPACE/your_report.txt" \
-          -F "minimum_severity=Info" \
-          -F "active=true" \
-          -F "verified=true" \
-          -F "scan_type=$type_scan" \
-          -F "close_old_findings=false" \
-          -F "test_title=EdgarPrueba-Pipeline" \
-          -F "product_name=WebGoat" \
-          -F "engagement_name=edgar" \
-          http://18.218.244.166:8080/api/v2/import-scan/
-      env:
-        api_key: ${{ secrets.API_KEY }}  
-        type_scan: ${{ github.event.inputs.type_scan }}
+      - name: "Generación de imagen de Docker"
+        run: |
+          docker build -f Dockerfile -t webgoat .
+
+      - name: Configuración de Python 3.8
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+
+      - name: Actualizar python
+        run: |
+              pip3 install requests
+
+      - name: "Dependency-check"
+        uses: dependency-check/Dependency-Check_Action@main
+        env:
+          JAVA_HOME: /opt/jdk
+        id: Depcheck
+        with:
+          project: 'WebGoat'
+          path: '.'
+          format: 'XML'
+          out: 'reporte'
+
+      - name: Reflect Dojo Dependency check
+        run: python3 upload-report.py -f ${{github.workspace}}/reporte/dependency-check-report.xml -t "Dependency Check Scan"
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          security-checks: 'vuln,secret,config'
+          ignore-unfixed: true
+          format: 'json'
+          output: 'trivy-results.json'
+
+      - name: Reflect Dojo trivy
+        run: python3 upload-report.py -f ./trivy-results.json -t "Trivy Scan" 
