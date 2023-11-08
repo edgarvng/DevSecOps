@@ -53,8 +53,8 @@ jobs:
           format: 'XML'
           out: 'reporte'
 
-#     - name: Reflect Dojo Dependency check
-#        run: python3 import.py -f ${{github.workspace}}/reporte/dependency-check-report.xml -t "Dependency Check Scan"
+      - name: Reflect Dojo Dependency check
+        run: python3 import.py -f ${{github.workspace}}/reporte/dependency-check-report.xml -t "Dependency Check Scan"
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
