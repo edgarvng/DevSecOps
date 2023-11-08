@@ -54,7 +54,7 @@ jobs:
           out: 'reporte'
 
       - name: Reflect Dojo Dependency check
-        run: python3 upload-report.py -f ${{github.workspace}}/reporte/dependency-check-report.xml -t "Dependency Check Scan"
+        run: python3 import.py -f ${{github.workspace}}/reporte/dependency-check-report.xml -t "Dependency Check Scan"
 
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -66,4 +66,4 @@ jobs:
           output: 'trivy-results.json'
 
       - name: Reflect Dojo trivy
-        run: python3 upload-report.py -f ./trivy-results.json -t "Trivy Scan" 
+        run: python3 import.py -f ./trivy-results.json -t "Trivy Scan" 
